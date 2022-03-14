@@ -4,6 +4,8 @@ Welcome to Would You Rather! A project born from the eager intention to get some
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Run installation first to 
+
 ## Available Scripts
 
 In the project directory, you can run:

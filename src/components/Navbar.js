@@ -13,7 +13,7 @@ function Navbar() {
       <Link to="/" className="navbar-nav-button">
         Home
       </Link>
-      <Link to="/addPoll" className="navbar-nav-button">
+      <Link to="/add" className="navbar-nav-button">
         Add Poll
       </Link>
       <Link to="/leaderboard" className="navbar-nav-button">

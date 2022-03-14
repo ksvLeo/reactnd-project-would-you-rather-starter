@@ -13,6 +13,10 @@ const AddPoll = (props) => {
 
   const handleAddPoll = (optionOne, optionTwo) => {
     if (optionOne !== "" && optionTwo !== "") {
+      if (optionOne === optionTwo) {
+        alert("Both options should not be the same!");
+        return;
+      }
       const question = {
         optionOneText: optionOne,
         optionTwoText: optionTwo,

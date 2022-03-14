@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const NewPoll = (props) => {
-  const {handleAddPoll} = props
+  const { handleAddPoll } = props;
   const [optionOne, setOptionOne] = useState("");
   const [optionTwo, setOptionTwo] = useState("");
   return (
@@ -25,7 +25,15 @@ const NewPoll = (props) => {
         />
       </div>
 
-      <button className="poll-add-button" onClick={() => {handleAddPoll(optionOne, optionTwo)}}>Add Poll</button>
+      <button
+        className="poll-add-button"
+        onClick={() => {
+          handleAddPoll(optionOne, optionTwo);
+        }}
+        disabled={!optionOne || !optionTwo}
+      >
+        Add Poll
+      </button>
     </div>
   );
 };

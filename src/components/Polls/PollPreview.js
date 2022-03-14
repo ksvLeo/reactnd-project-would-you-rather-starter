@@ -10,7 +10,7 @@ function PollPreview(props) {
   return (
     <div
       className="poll-preview poll-options-container"
-      onClick={() => navigate("../" + question.id)}
+      onClick={() => navigate("../questions/" + question.id)}
     >
       <p className="poll-options-text">
         ...{question.optionOne.text} or {question.optionTwo.text}?
@@ -23,13 +23,11 @@ function PollPreview(props) {
       <div className="poll-options-buttons">
         <span
           className="poll-option-one"
-        //   onClick={() => handleAnswerPoll(question.id, "optionOne")}
         >
           {capitalizeString(question.optionOne.text)}
         </span>
         <span
           className="poll-option-two"
-        //   onClick={() => handleAnswerPoll(question.id, "optionTwo")}
         >
           {capitalizeString(question.optionTwo.text)}
         </span>

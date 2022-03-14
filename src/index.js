@@ -7,6 +7,10 @@ import { Provider } from "react-redux";
 import usersReducer from "./reducers/users";
 import questionsReducer from "./reducers/questions";
 import sessionReducer from "./reducers/session";
+import {
+  loadingBarMiddleware,
+  loadingBarReducer,
+} from "react-redux-loading-bar";
 
 const store = configureStore({
   reducer: {
@@ -14,14 +18,11 @@ const store = configureStore({
     questions: questionsReducer,
     session: sessionReducer,
   }
-  // middleware: {
-
-  // },
 });
 
 ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById("root")
 );

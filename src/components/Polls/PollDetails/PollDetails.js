@@ -1,6 +1,3 @@
-import { useDispatch } from "react-redux";
-import { useParams, useSearchParams } from "react-router-dom";
-import { handleGetQuestionById } from "../../../actions/questions";
 import { capitalizeString } from "../../../utils/helpers";
 
 function PollDetails(props) {

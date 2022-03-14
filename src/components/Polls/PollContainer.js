@@ -8,7 +8,7 @@ const PollContainer = (props) => {
 
   return (
     <div className="">
-      <label onClick={() => question ? navigate("../" + question.id) : null}  title={question && "Click to view poll"} className={question ? "poll-header clickable" : "poll-header"}>
+      <label onClick={() => question ? navigate("../questions/" + question.id) : null}  title={question && "Click to view poll"} className={question ? "poll-header clickable" : "poll-header"}>
         Would You Rather...
         {question && (
           <span className="poll-data">

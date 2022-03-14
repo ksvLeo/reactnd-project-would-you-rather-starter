@@ -28,7 +28,7 @@ export function _userLogin(userId) {
 
 export function _getQuestionById(questionId) {
   return new Promise((res, rej) => {
-    setTimeout(() => res(questions[questionId]), 1000);
+    setTimeout(() => res(questions[questionId]), 500);
   });
 }
 

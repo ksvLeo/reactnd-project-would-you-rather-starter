@@ -1,7 +1,7 @@
-import { hasUnreliableEmptyValue } from "@testing-library/user-event/dist/utils";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+} from "react-router-dom";
 import { handleLogin } from "../../actions/session";
 
 export default function LoginForm() {
@@ -21,18 +21,8 @@ export default function LoginForm() {
 
   const handleSuccessfulLogin = (id) => {
     Promise.all([dispatch(handleLogin(id))]).then(() => {
-      navigate("/");
+      navigate(window.location.pathname);
     });
-  };
-
-  const [login, setLogin] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const printInput = () => {
-    console.log(username, password);
   };
 
   return (
@@ -52,33 +42,6 @@ export default function LoginForm() {
           ></img>
         ))}
       </div>
-
-      {/* <div className="input-container">
-        <input
-          type="text"
-          placeholder="Username..."
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Password..."
-          onChange={(event) => {
-            setPassword(event.target.value);
-          }}
-        />
-      </div>
-
-      <div>
-        <button
-          onClick={() => {
-            printInput();
-          }}
-        >
-          Login
-        </button>
-      </div> */}
     </div>
   );
 }

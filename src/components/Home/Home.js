@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { handleAnswerQuestion } from "../../actions/shared";
 import PollDetails from "../Polls/PollDetails/PollDetails";
@@ -11,24 +11,31 @@ function Home(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const urlParams = useParams();
-  const questionDetailsId = urlParams["questionId"];
+  const { authedUser, loggedAnswers } = props;
+
   const [questionSelected, setQuestionSelected] = useState(null);
   const [toggleQuestions, setToggleQuestions] = useState("unanswered");
+  const [loading, setLoading] = useState(null);
+  const urlParams = useParams();
+  const questionDetailsId = urlParams["question_Id"];
 
-  if (questionDetailsId) {
-    handleGetQuestionById(questionDetailsId).then((result) => {
-      setQuestionSelected(result);
-      setToggleQuestions("")
-    });
-  } else if (questionSelected) {
-    setQuestionSelected(null);
-  }
+  useEffect(() => {
+    if (questionDetailsId) {
+      if (!loading && !questionSelected) {
+        handleGetQuestionById(questionDetailsId).then((result) => {
+          if (!result) navigate("../404-notfound");
+          setQuestionSelected(result);
+          setLoading(false);
+        });
 
-  if (!toggleQuestions) 
-    setToggleQuestions("unanswered")
-
-  const { authedUser, loggedAnswers } = props;
+        setToggleQuestions("details");
+      }
+    } else {
+      if (questionSelected) setQuestionSelected(null);
+      if (toggleQuestions === "details") setToggleQuestions("unanswered");
+      setLoading(false);
+    }
+  });
 
   const questions = useSelector((state) => sortPolls(state.questions.value));
 
@@ -44,10 +51,11 @@ function Home(props) {
   });
 
   const finishedLoading = () => {
-    return (
+    const finished =
       Object.values(questions.value).length > 0 &&
-      Object.values(questionsUsers.value).length > 0
-    );
+      Object.values(questionsUsers.value).length > 0 &&
+      loading === false;
+    return finished;
   };
 
   const handleAnswerPoll = (questionId, answer) => {
@@ -61,32 +69,50 @@ function Home(props) {
   };
 
   return (
-    <div className="home-container">
-      <div className="polls-selector">
-        <span
-          onClick={() => handleToggleView("unanswered")}
-          className={toggleQuestions === "unanswered" ? "active" : ""}
-        >
-          Unanswered
-        </span>
-        <span
-          onClick={() => handleToggleView("answered")}
-          className={toggleQuestions === "answered" ? "active" : ""}
-        >
-          Answered
-        </span>
-      </div>
+    <>
       {finishedLoading() && (
-        <div className="poll-preview-collection">
-          {!questionDetailsId ? (
-            Object.values(questions.value).map((question) => {
-              if (
-                toggleQuestions === "unanswered" &&
-                !loggedAnswers[question.id]
-              )
-                return (
-                  <div key={question.id} className="poll-preview-container">
-                    <div className="poll-container">
+        <div className="home-container">
+          <div className="polls-selector">
+            <span
+              onClick={() => handleToggleView("unanswered")}
+              className={toggleQuestions === "unanswered" ? "active" : ""}
+            >
+              Unanswered
+            </span>
+            <span
+              onClick={() => handleToggleView("answered")}
+              className={toggleQuestions === "answered" ? "active" : ""}
+            >
+              Answered
+            </span>
+          </div>
+          <div className="poll-preview-collection">
+            {!questionDetailsId ? (
+              Object.values(questions.value).map((question) => {
+                if (
+                  toggleQuestions === "unanswered" &&
+                  !loggedAnswers[question.id]
+                )
+                  return (
+                    <div key={question.id} className="poll-preview-container">
+                      <div className="poll-container">
+                        <PollContainer question={question} showData={false}>
+                          <PollPreview
+                            question={question}
+                            avatarURL={
+                              questionsUsers.value[question.author].avatarURL
+                            }
+                          />
+                        </PollContainer>
+                      </div>
+                    </div>
+                  );
+                if (
+                  toggleQuestions === "answered" &&
+                  loggedAnswers[question.id]
+                )
+                  return (
+                    <div key={question.id} className="poll-container">
                       <PollContainer question={question} showData={false}>
                         <PollPreview
                           question={question}
@@ -96,41 +122,28 @@ function Home(props) {
                         />
                       </PollContainer>
                     </div>
-                  </div>
-                );
-              if (toggleQuestions === "answered" && loggedAnswers[question.id])
-                return (
-                  <div key={question.id} className="poll-container">
-                    <PollContainer question={question} showData={false}>
-                      <PollPreview
-                        question={question}
-                        avatarURL={
-                          questionsUsers.value[question.author].avatarURL
-                        }
-                      />
-                    </PollContainer>
-                  </div>
-                );
-            })
-          ) : (
-            <>
-              {questionSelected && (
-                <PollContainer question={questionSelected}>
-                  <PollDetails
-                    question={questionSelected}
-                    userAnswer={loggedAnswers[questionDetailsId]}
-                    avatarURL={
-                      questionsUsers.value[questionSelected.author].avatarURL
-                    }
-                    handleAnswerPoll={handleAnswerPoll}
-                  />
-                </PollContainer>
-              )}
-            </>
-          )}
+                  );
+              })
+            ) : (
+              <>
+                {questionSelected && (
+                  <PollContainer question={questionSelected}>
+                    <PollDetails
+                      question={questionSelected}
+                      userAnswer={loggedAnswers[questionDetailsId]}
+                      avatarURL={
+                        questionsUsers.value[questionSelected.author].avatarURL
+                      }
+                      handleAnswerPoll={handleAnswerPoll}
+                    />
+                  </PollContainer>
+                )}
+              </>
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 const sortPolls = (polls) => {

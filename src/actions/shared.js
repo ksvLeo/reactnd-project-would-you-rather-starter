@@ -44,7 +44,5 @@ export function handleAddQuestion({optionOneText, optionTwoText, author}) {
       dispatch(addQuestion(formattedQuestion)),
       dispatch(createdQuestion(formattedQuestion))
     ])
-    
-    // request questions when navigating back to Home to refresh for others polls
   };
 }
